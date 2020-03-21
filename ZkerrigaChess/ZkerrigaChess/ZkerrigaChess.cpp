@@ -30,7 +30,7 @@ int main() {
 	chess_desk->print_chess_desk();
 
 	string command;
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 4; i++) {
 		getline(cin, command);
 		coordinate_parser(command, chess_desk);
 		chess_desk->print_chess_desk();

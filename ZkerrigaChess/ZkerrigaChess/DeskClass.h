@@ -124,22 +124,44 @@ public:
 		}
 		return false;
 	}
-	bool is_it_possible_to_make_a_rocker(char way) { //way == 'r', that equal right rocker or way == 'l', that equal left rocker
+	bool is_it_possible_to_make_a_castling(char way) { //way == 'r', that equal right rocker or way == 'l', that equal left rocker
 		int y_line = (whose_move == 'w') ? 7 : 0;
 		int temp_x = king_place[whose_move][0];
 		int temp_y = king_place[whose_move][1];
 		if (way == 'l') {
 			if (desk[0][y_line]->get_figure_sign() != '#' || desk[4][y_line]->get_figure_sign() != '$' ||
-				desk[0][y_line]->get_moved_status() || desk[4][y_line]->get_moved_status())
+				desk[1][y_line]->get_figure_sign() != ' ' || desk[2][y_line]->get_figure_sign() != ' ' ||
+				desk[3][y_line]->get_figure_sign() != ' ' || desk[0][y_line]->get_moved_status() ||
+				desk[4][y_line]->get_moved_status())
 				return false;
-			//gsearch SHAH, change king_place
+			king_place[whose_move][0] = 3;
+			if (is_someone_attacking_the_king(whose_move)) {
+				king_place[whose_move][0] = temp_x; //return coordinates
+				return false;
+			}
+			king_place[whose_move][0] = 2;
+			if (is_someone_attacking_the_king(whose_move)) {
+				king_place[whose_move][0] = temp_x; //return coordinates
+				return false;
+			}
 		}
 		else if (way == 'r') {
 			if (desk[7][y_line]->get_figure_sign() != '#' || desk[4][y_line]->get_figure_sign() != '$' ||
+				desk[6][y_line]->get_figure_sign() != ' ' || desk[5][y_line]->get_figure_sign() != ' ' ||
 				desk[7][y_line]->get_moved_status() || desk[4][y_line]->get_moved_status())
 				return false;
-			//gsearch SHAH
+			king_place[whose_move][0] = 5;
+			if (is_someone_attacking_the_king(whose_move)) {
+				king_place[whose_move][0] = temp_x; //return coordinates
+				return false;
+			}
+			king_place[whose_move][0] = 6;
+			if (is_someone_attacking_the_king(whose_move)) {
+				king_place[whose_move][0] = temp_x; //return coordinates
+				return false;
+			}
 		}
+		return true;
 	}
 	void move(int x1, int y1, int x2, int y2) {
 		char current_figure = desk[x1][y1]->get_figure_sign();
@@ -195,6 +217,34 @@ public:
 				}
 				chess_timer.update_time(whose_move); //update time
 				whose_move = (whose_move == 'w') ? 'b' : 'w';
+			}
+		}
+		else if (desk[x1][y1]->get_figure_sign() == '$' && y2 == y1 && (x2 == x1 + 2 || x2 == x1 - 2) && !is_someone_attacking_the_king(whose_move)) {
+			char way = (x2 > x1) ? 'r' : 'l';
+			if (is_it_possible_to_make_a_castling(way)) {
+				if (way == 'r') { //Right Castling
+					delete desk[x2][y2];
+					desk[x2][y2] = desk[x1][y1];
+					desk[x1][y1] = new EmptyFigure;
+					delete desk[x2 - 1][y2];
+					desk[x2 - 1][y1] = desk[7][y1];
+					desk[7][y1] = new EmptyFigure;
+					ErrorGenerator::set("Right castling.");
+				}
+				else { //Left Castling
+					delete desk[x2][y2];
+					desk[x2][y2] = desk[x1][y1];
+					desk[x1][y1] = new EmptyFigure;
+					delete desk[x2 + 1][y2];
+					desk[x2 + 1][y1] = desk[0][y1];
+					desk[0][y1] = new EmptyFigure;
+					ErrorGenerator::set("Left castling.");
+				}
+				chess_timer.update_time(whose_move); //update time
+				whose_move = (whose_move == 'w') ? 'b' : 'w';
+			}
+			else {
+				ErrorGenerator::set("Castling isn't possible!");
 			}
 		}
 		else {

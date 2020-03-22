@@ -44,7 +44,9 @@ public:
 		return false;
 	}
 	virtual void change_moved_status_to_true() {}
-	virtual bool get_moved_status() {}
+	virtual bool get_moved_status() {
+		return false;
+	}
 };
 
 class Rook : public Figure {
@@ -54,6 +56,7 @@ private:
 public:
 	Rook(char c) {
 		change_figure_color(c);
+		moved = false;
 	}
 	~Rook() {
 		ErrorGenerator::set("Rook dead!");
@@ -189,6 +192,7 @@ private:
 public:
 	King(char c) {
 		change_figure_color(c);
+		moved = false;
 	}
 	~King() {
 		ErrorGenerator::set("What?! You couldn't do that!!!");

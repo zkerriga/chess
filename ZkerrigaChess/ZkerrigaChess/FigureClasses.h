@@ -53,7 +53,6 @@ public:
 	}
 	~Rook() {
 		ErrorGenerator::set("Rook dead!");
-		//cout << "[+] Rook dead!" << endl;
 	}
 	virtual char get_figure_sign() {
 		return '#';

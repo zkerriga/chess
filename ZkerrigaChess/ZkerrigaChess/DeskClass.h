@@ -10,6 +10,7 @@
 
 #include "ErrorGenerator.h"
 #include "FigureClasses.h"
+#include "Timer.h"
 using namespace std;
 
 class ChessDesk {
@@ -17,6 +18,7 @@ private:
 	char whose_move; //'w' or 'b' equal 'white' or 'black'
 	map <char, int[2]> king_place;
 	Figure *desk[8][8];
+	ChessTimer chess_timer;
 
 public:
 	//Constructor:
@@ -95,10 +97,14 @@ public:
 			}
 			else if (y == 3)
 				ErrorGenerator::print();
-			else if (y == 4)
-				cout << "		Blue time: 0:00:00" << endl;
-			else if (y == 5)
-				cout << "		White time: 0:00:00" << endl;
+			else if (y == 4) {
+				cout << "		Blue time: ";
+				chess_timer.print_time('b');
+			}
+			else if (y == 5) {
+				cout << "		White time: ";
+				chess_timer.print_time('w');
+			}
 			else
 				cout << endl;
 		}
@@ -147,6 +153,7 @@ public:
 			}
 			else {
 				delete temp; // Delete the reminded figure
+				chess_timer.update_time(whose_move); //update time
 				whose_move = (whose_move == 'w') ? 'b' : 'w';
 			}
 			if (desk[x2][y2]->get_figure_sign() == '1') {

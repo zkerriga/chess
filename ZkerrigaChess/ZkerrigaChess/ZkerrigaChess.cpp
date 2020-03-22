@@ -40,7 +40,6 @@ int main() {
 		}
 		else if (command.size() != 5) {
 			ErrorGenerator::set("Invalid command, try again! (input format: e2-e4)");
-			//cout << "Invalid command, try again! (input format: e2-e4)" << endl;
 		}
 		else
 			coordinate_parser(command, chess_desk);

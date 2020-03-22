@@ -194,11 +194,11 @@ public:
 				delete temp; // Delete the reminded figure
 				if (current_figure == '1' || current_figure == '#' || current_figure == '$') { //change moved status and reborn pawns
 					if (current_figure == '1' && (y2 == 0 || y2 == 7)) {
-						cout << endl << "Choose your fighter: # ? ! & -> ";
+						cout << endl << "		Choose your fighter: # ? ! & -> ";
 						string new_figure;
 						getline(cin, new_figure);
 						while (new_figure[0] != '#' && new_figure[0] != '?' && new_figure[0] != '!' && new_figure[0] != '&') {
-							cout << endl << "Try again -> ";
+							cout << endl << "		Try again -> ";
 							getline(cin, new_figure);
 						}
 						delete desk[x2][y2];

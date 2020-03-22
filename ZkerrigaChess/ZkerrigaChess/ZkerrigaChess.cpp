@@ -14,9 +14,15 @@ using namespace std;
 
 void coordinate_parser(string command, ChessDesk *chess_desk) {
 	int x1, x2, y1, y2;
-	x1 = command[0] - 'a';
+	if (command[0] > 'A' && command[0] < 'Z')
+		x1 = command[0] - 'A';
+	else
+		x1 = command[0] - 'a';
 	y1 = 8 - (command[1] - '0');
-	x2 = command[3] - 'a';
+	if (command[3] > 'A' && command[3] < 'Z')
+		x2 = command[3] - 'A';
+	else
+		x2 = command[3] - 'a';
 	y2 = 8 - (command[4] - '0');
 	if (x1 < 0 || x1 > 7 || x2 < 0 || x2 > 7 || y1 < 0 || y1 > 7 || y2 < 0 || y2 > 7) {
 		ErrorGenerator::set("Invalid coordinates!");
@@ -26,7 +32,61 @@ void coordinate_parser(string command, ChessDesk *chess_desk) {
 	}
 }
 
+#define TEXT 8
+#define TEXT2 11 //6 - yellow
+#define EMPHASIS 14 //light yellow
+
+void print_hint() {
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(handle, TEXT2);
+	cout << endl << endl;
+	cout << "	It is time to return to the past the game industry!" << endl;
+	cout << "	Awful graphics, uncomfortable gameplay and that's not all!" << endl << endl;
+	SetConsoleTextAttribute(handle, TEXT);
+	cout << "	To make moves, enter commands of this format: ";
+	SetConsoleTextAttribute(handle, EMPHASIS);
+	cout << "e2-e4" << endl;
+	SetConsoleTextAttribute(handle, TEXT);
+	cout << "	To end the game, enter: ";
+	SetConsoleTextAttribute(handle, EMPHASIS);
+	cout << "stop" << endl << endl;
+
+	SetConsoleTextAttribute(handle, TEXT);
+	cout << "	A little help:" << endl;
+	SetConsoleTextAttribute(handle, EMPHASIS);
+	cout << "		1";
+	SetConsoleTextAttribute(handle, TEXT);
+	cout << " is a pawn		";
+	SetConsoleTextAttribute(handle, EMPHASIS);
+	cout << "#";
+	SetConsoleTextAttribute(handle, TEXT);
+	cout << " is a rook" << endl;
+	SetConsoleTextAttribute(handle, EMPHASIS);
+	cout << "		?";
+	SetConsoleTextAttribute(handle, TEXT);
+	cout << " is a knight		";
+	SetConsoleTextAttribute(handle, EMPHASIS);
+	cout << "&";
+	SetConsoleTextAttribute(handle, TEXT);
+	cout << " is a queen" << endl;
+	SetConsoleTextAttribute(handle, EMPHASIS);
+	cout << "		!";
+	SetConsoleTextAttribute(handle, TEXT);
+	cout << " is a bishop		";
+	SetConsoleTextAttribute(handle, EMPHASIS);
+	cout << "$";
+	SetConsoleTextAttribute(handle, TEXT);
+	cout << " is a king" << endl << endl;
+
+	SetConsoleTextAttribute(handle, TEXT2);
+	string pass;
+	cout << "	Let's start? ";
+	getline(cin, pass);
+	system("cls");
+}
+
 int main() {
+	print_hint(); 
 	//Create a desk
 	ChessDesk *chess_desk = new ChessDesk;
 	chess_desk->print_chess_desk();

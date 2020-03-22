@@ -44,9 +44,13 @@ public:
 		return false;
 	}
 	virtual void change_moved_status_to_true() {}
+	virtual bool get_moved_status() {}
 };
 
 class Rook : public Figure {
+private:
+	bool moved;
+
 public:
 	Rook(char c) {
 		change_figure_color(c);
@@ -56,6 +60,12 @@ public:
 	}
 	virtual char get_figure_sign() {
 		return '#';
+	}
+	virtual void change_moved_status_to_true() {
+		moved = true;
+	}
+	virtual bool get_moved_status() {
+		return moved;
 	}
 	virtual bool ñan_a_figure_make_a_move(int x1, int y1, int x2, int y2, Figure *desk[8][8]) { //take a valid x,y!!!
 		if (x1 == x2) {
@@ -88,7 +98,6 @@ public:
 	}
 	~Knight() {
 		ErrorGenerator::set("Knight dead!");
-		//cout << "[+] Knight dead!" << endl;
 	}
 	virtual char get_figure_sign() {
 		return '?';
@@ -108,7 +117,6 @@ public:
 	}
 	~Bishop() {
 		ErrorGenerator::set("Bishop dead!");
-		//cout << "[+] Bishop dead!" << endl;
 	}
 	virtual char get_figure_sign() {
 		return '!';
@@ -136,7 +144,6 @@ public:
 	}
 	~Queen() {
 		ErrorGenerator::set("Queen dead!");
-		//cout << "[+] Queen dead!" << endl;
 	}
 	virtual char get_figure_sign() {
 		return '&';
@@ -176,13 +183,21 @@ public:
 };
 
 class King : public Figure {
+private:
+	bool moved; 
+
 public:
 	King(char c) {
 		change_figure_color(c);
 	}
 	~King() {
 		ErrorGenerator::set("What?! You couldn't do that!!!");
-		//cout << "[+] King dead!" << endl;
+	}
+	virtual void change_moved_status_to_true() {
+		moved = true;
+	}
+	virtual bool get_moved_status() {
+		return moved;
 	}
 	virtual char get_figure_sign() {
 		return '$';
@@ -205,7 +220,6 @@ public:
 	}
 	~Pawn() {
 		ErrorGenerator::set("Pawn dead!");
-		//cout << "[+] Pawn dead!" << endl;
 	}
 	virtual void change_moved_status_to_true() {
 		moved = true;

@@ -124,7 +124,26 @@ public:
 		}
 		return false;
 	}
+	bool is_it_possible_to_make_a_rocker(char way) { //way == 'r', that equal right rocker or way == 'l', that equal left rocker
+		int y_line = (whose_move == 'w') ? 7 : 0;
+		int temp_x = king_place[whose_move][0];
+		int temp_y = king_place[whose_move][1];
+		if (way == 'l') {
+			if (desk[0][y_line]->get_figure_sign() != '#' || desk[4][y_line]->get_figure_sign() != '$' ||
+				desk[0][y_line]->get_moved_status() || desk[4][y_line]->get_moved_status())
+				return false;
+			//gsearch SHAH, change king_place
+		}
+		else if (way == 'r') {
+			if (desk[7][y_line]->get_figure_sign() != '#' || desk[4][y_line]->get_figure_sign() != '$' ||
+				desk[7][y_line]->get_moved_status() || desk[4][y_line]->get_moved_status())
+				return false;
+			//gsearch SHAH
+		}
+	}
 	void move(int x1, int y1, int x2, int y2) {
+		char current_figure = desk[x1][y1]->get_figure_sign();
+
 		if (desk[x1][y1]->get_figure_color() != whose_move) {
 			ErrorGenerator::set("This figure is not yours, try again!");
 			return;
@@ -135,14 +154,14 @@ public:
 			Figure *temp = desk[x2][y2]; //Remind a figure
 			desk[x2][y2] = desk[x1][y1];
 			desk[x1][y1] = new EmptyFigure;
-			if (desk[x2][y2]->get_figure_sign() == '$') {
+			if (current_figure == '$') {
 				king_place[whose_move][0] = x2;
 				king_place[whose_move][1] = y2;
 			}
 			if (is_someone_attacking_the_king(whose_move)) { //Search a SHAH
 				ErrorGenerator::set("The king is under attack!");
 				delete desk[x1][y1];
-				if (desk[x2][y2]->get_figure_sign() == '$') {
+				if (current_figure == '$') {
 					king_place[whose_move][0] = x1;
 					king_place[whose_move][1] = y1;
 				}
@@ -151,8 +170,8 @@ public:
 			}
 			else {
 				delete temp; // Delete the reminded figure
-				if (desk[x2][y2]->get_figure_sign() == '1') {
-					if (y2 == 0 || y2 == 7) {
+				if (current_figure == '1' || current_figure == '#' || current_figure == '$') { //change moved status and reborn pawns
+					if (current_figure == '1' && (y2 == 0 || y2 == 7)) {
 						cout << endl << "Choose your fighter: # ? ! & -> ";
 						string new_figure;
 						getline(cin, new_figure);

@@ -127,12 +127,10 @@ public:
 	void move(int x1, int y1, int x2, int y2) {
 		if (desk[x1][y1]->get_figure_color() != whose_move) {
 			ErrorGenerator::set("This figure is not yours, try again!");
-			//cout << "This figure is not yours, try again!" << endl;
 			return;
 		}
 		if (desk[x1][y1]->get_figure_color() == desk[x2][y2]->get_figure_color())
 			ErrorGenerator::set("You can't eat your figure!");
-			//cout << "You can't eat your figure!" << endl;
 		else if (desk[x1][y1]->ñan_a_figure_make_a_move(x1, y1, x2, y2, desk)) {
 			Figure *temp = desk[x2][y2]; //Remind a figure
 			desk[x2][y2] = desk[x1][y1];
@@ -153,16 +151,35 @@ public:
 			}
 			else {
 				delete temp; // Delete the reminded figure
+				if (desk[x2][y2]->get_figure_sign() == '1') {
+					if (y2 == 0 || y2 == 7) {
+						cout << endl << "Choose your fighter: # ? ! & -> ";
+						string new_figure;
+						getline(cin, new_figure);
+						while (new_figure[0] != '#' && new_figure[0] != '?' && new_figure[0] != '!' && new_figure[0] != '&') {
+							cout << endl << "Try again -> ";
+							getline(cin, new_figure);
+						}
+						delete desk[x2][y2];
+						if (new_figure[0] == '#')
+							desk[x2][y2] = new Rook(whose_move);
+						else if (new_figure[0] == '?')
+							desk[x2][y2] = new Knight(whose_move);
+						else if (new_figure[0] == '!')
+							desk[x2][y2] = new Bishop(whose_move);
+						else if (new_figure[0] == '&')
+							desk[x2][y2] = new Queen(whose_move);
+						ErrorGenerator::set("THE PAWN WAS REBORN!");
+					}
+					else
+						desk[x2][y2]->change_moved_status_to_true();
+				}
 				chess_timer.update_time(whose_move); //update time
 				whose_move = (whose_move == 'w') ? 'b' : 'w';
-			}
-			if (desk[x2][y2]->get_figure_sign() == '1') {
-				desk[x2][y2]->change_moved_status_to_true();
 			}
 		}
 		else {
 			ErrorGenerator::set("Invalid movement, try again!");
-			//cout << "Invalid movement, try again!" << endl;
 		}
 	}
 };
